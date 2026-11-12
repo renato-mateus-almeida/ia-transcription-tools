@@ -20,6 +20,8 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 4. **Só avançar depois que o usuário confirmar** que o teste passou.
 5. Marcar a tarefa como concluída no PRD (ex.: `### T1 ✅ — Preparar o sistema`) e **sugerir uma
    mensagem de commit**. Commit/push só quando o usuário pedir.
+   **Commits e PRs sem atribuição ao Claude:** não adicionar `Co-Authored-By: Claude ...` nem
+   linhas "Generated with Claude Code" (decisão do usuário; vale sobre o padrão do Claude Code).
 6. **Nunca colocar segredos** (token do Hugging Face etc.) no código nem no Git: usar `.env`
    (versionar só `.env.example`, sem valores).
 7. Responder em português.

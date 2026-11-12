@@ -66,7 +66,7 @@ São 12 tarefas, cada uma pode ser entregue inteira ao Claude Code. Cada uma tem
 Rodar `nvidia-smi` para anotar placa, VRAM e versão do CUDA. Instalar `ffmpeg`, `python3-venv` e `git` via apt.
 **Pronto quando:** `nvidia-smi` e `ffmpeg -version` funcionam.
 
-### T2 — Criar o repositório
+### T2 ✅ — Criar o repositório
 
 Criar a pasta do projeto, `git init`, repositório no GitHub e `.gitignore` ignorando `.env`, `venv/`, áudios, transcrições, notas e logs.
 **Pronto quando:** primeiro commit enviado e `git status` não mostra esses arquivos.
