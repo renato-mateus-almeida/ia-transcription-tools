@@ -1,0 +1,48 @@
+# --- Segredos (token do Hugging Face etc.) ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# --- Áudios e vídeos (gravações contêm dados sensíveis) ---
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.oga
+*.flac
+*.opus
+*.wma
+*.webm
+*.mp4
+*.mkv
+*.mov
+*.avi
+
+# --- Transcrições, notas e logs ---
+# Ficam em ~/Transcricoes (fora do projeto); ignoradas aqui caso caiam dentro do repo.
+Transcricoes/
+Entrada/
+Brutas/
+Notas/
+Processados/
+logs/
+*.log
+
+# --- Editores / sistema ---
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# --- Configuração local do Claude Code ---
+.claude/settings.local.json
