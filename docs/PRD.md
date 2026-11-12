@@ -81,7 +81,7 @@ Criar o venv, instalar PyTorch com CUDA compatível, WhisperX, watchdog e python
 Criar token do Hugging Face, aceitar os termos dos modelos pyannote, salvar no `.env` (com `.env.example` sem valor). Confirmar que `claude -p "diga olá"` responde.
 **Pronto quando:** os dois funcionam e o `.env` está fora do Git.
 
-### T5 — Configuração, pastas e logs
+### T5 ✅ — Configuração, pastas e logs
 
 Criar `config.py` com caminhos, modelo `large-v3`, float16, idioma pt e extensões aceitas. Criar as cinco pastas automaticamente e logs em `~/Transcricoes/logs`.
 **Pronto quando:** rodar duas vezes sem erro e o log registrar mensagens.
