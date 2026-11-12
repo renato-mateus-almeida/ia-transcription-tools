@@ -33,6 +33,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 - Driver NVIDIA 595.99.02; `nvidia-smi` reporta **CUDA 13.2** (versão máxima suportada pelo driver).
   O toolkit CUDA (`nvcc`) não está instalado e não é necessário: as wheels do PyTorch trazem o
   runtime CUDA próprio — escolher na T3 uma build de CUDA ≤ 13.2.
+- Stack Python (T3, versões exatas em `requirements.txt`): whisperx 3.8.6, torch 2.8.0+cu128
+  (WhisperX exige `torch~=2.8.0`), pyannote-audio 4.0.7, ctranslate2 4.9.0, faster-whisper 1.2.1.
+  Instalar com `venv/bin/pip install -r requirements.txt`.
+- **Armadilha conhecida:** `av` 19 é incompatível com o `decode_audio` do faster-whisper 1.2.1
+  (`TypeError: ... 'metadata_errors'`). Sempre carregar áudio com `whisperx.load_audio()` (usa o
+  ffmpeg CLI) e passar o array ao modelo — nunca passar o caminho do arquivo direto ao faster-whisper.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

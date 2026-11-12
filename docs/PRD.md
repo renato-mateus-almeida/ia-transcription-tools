@@ -71,7 +71,7 @@ Rodar `nvidia-smi` para anotar placa, VRAM e versão do CUDA. Instalar `ffmpeg`,
 Criar a pasta do projeto, `git init`, repositório no GitHub e `.gitignore` ignorando `.env`, `venv/`, áudios, transcrições, notas e logs.
 **Pronto quando:** primeiro commit enviado e `git status` não mostra esses arquivos.
 
-### T3 — Ambiente Python com GPU
+### T3 ✅ — Ambiente Python com GPU
 
 Criar o venv, instalar PyTorch com CUDA compatível, WhisperX, watchdog e python-dotenv; gerar `requirements.txt`.
 **Pronto quando:** `torch.cuda.is_available()` retorna `True` e `import whisperx` funciona.
