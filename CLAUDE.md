@@ -39,6 +39,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 - **Armadilha conhecida:** `av` 19 é incompatível com o `decode_audio` do faster-whisper 1.2.1
   (`TypeError: ... 'metadata_errors'`). Sempre carregar áudio com `whisperx.load_audio()` (usa o
   ffmpeg CLI) e passar o array ao modelo — nunca passar o caminho do arquivo direto ao faster-whisper.
+- Claude Code CLI standalone em `~/.local/bin/claude` (instalador oficial; caminho fixo, usar no
+  serviço). Não usar o binário do app desktop (`~/.config/Claude/claude-code/<versão>/...`), que muda
+  a cada atualização. Login compartilhado via `~/.claude/.credentials.json`.
+- **Armadilha conhecida (T7):** `claude -p` rodado com cwd dentro do projeto carrega este CLAUDE.md
+  (e lê o PRD). Ao gerar notas, rodar o subprocess com `cwd` fora do repositório (ex.: `~/Transcricoes`)
+  e sem as variáveis `CLAUDECODE`/`CLAUDE_CODE_*` herdadas.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

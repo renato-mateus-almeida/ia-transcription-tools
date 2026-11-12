@@ -76,7 +76,7 @@ Criar a pasta do projeto, `git init`, repositório no GitHub e `.gitignore` igno
 Criar o venv, instalar PyTorch com CUDA compatível, WhisperX, watchdog e python-dotenv; gerar `requirements.txt`.
 **Pronto quando:** `torch.cuda.is_available()` retorna `True` e `import whisperx` funciona.
 
-### T4 — Credenciais e Claude
+### T4 ✅ — Credenciais e Claude
 
 Criar token do Hugging Face, aceitar os termos dos modelos pyannote, salvar no `.env` (com `.env.example` sem valor). Confirmar que `claude -p "diga olá"` responde.
 **Pronto quando:** os dois funcionam e o `.env` está fora do Git.
