@@ -91,7 +91,7 @@ Criar `config.py` com caminhos, modelo `large-v3`, float16, idioma pt e extensõ
 Transcrever com WhisperX, alinhar palavras, separar falantes, formatar como `[00:01:23] Falante 1: ...`, salvar em `Brutas` e liberar a memória da GPU ao final.
 **Pronto quando:** um áudio de teste vira um `.txt` legível com falantes marcados.
 
-### T7 — Módulo de análise com o Claude
+### T7 ✅ — Módulo de análise com o Claude
 
 Criar `prompt.md` com as seções da nota, chamar `claude -p` via subprocess com timeout e `--allowedTools` mínimo, salvar a nota em `Notas` como `AAAA-MM-DD_HHMM_nome.md` e, se falhar, registrar no log mantendo a transcrição bruta.
 **Pronto quando:** uma transcrição de teste vira uma nota completa.

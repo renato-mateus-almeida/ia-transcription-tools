@@ -39,6 +39,12 @@ EXTENSOES_AUDIO = frozenset({".mp3", ".wav", ".m4a", ".ogg", ".flac", ".opus", "
 EXTENSOES_VIDEO = frozenset({".mp4", ".mkv", ".webm", ".mov", ".avi"})
 EXTENSOES_ACEITAS = EXTENSOES_AUDIO | EXTENSOES_VIDEO
 
+# --- Claude Code (T7) --------------------------------------------------------
+# Caminho fixo: o serviço systemd não tem ~/.local/bin no PATH.
+CLAUDE_BIN = Path(os.getenv("CLAUDE_BIN") or "~/.local/bin/claude").expanduser()
+CLAUDE_TIMEOUT = int(os.getenv("CLAUDE_TIMEOUT") or 900)  # segundos (15 min)
+PROMPT_ARQUIVO = PROJETO_DIR / "prompt.md"
+
 # --- Credenciais (somente via .env; nunca escrever valores aqui) -------------
 HF_TOKEN = (os.getenv("HF_TOKEN") or "").strip()
 
