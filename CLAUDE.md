@@ -45,6 +45,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 - **Armadilha conhecida (T7):** `claude -p` rodado com cwd dentro do projeto carrega este CLAUDE.md
   (e lê o PRD). Ao gerar notas, rodar o subprocess com `cwd` fora do repositório (ex.: `~/Transcricoes`)
   e sem as variáveis `CLAUDECODE`/`CLAUDE_CODE_*` herdadas.
+- VRAM medida na T6: transcrição large-v3 ~4,8 GB; alinhamento ~0,6 GB; diarização mostra pico de
+  ~10 GB no `nvidia-smi`, mas é uso oportunista (com limite de 1,7 GB funciona igual, pico real
+  ~1,6 GB). Não é risco de falta de memória.
+- **Armadilha conhecida (T9):** a saída de áudio muda (HDMI, fone Bluetooth, Yeti...). Nunca fixar
+  nomes de dispositivos: gravar com `-f pulse -i default` (microfone padrão) e
+  `-f pulse -i @DEFAULT_MONITOR@` (monitor da saída padrão atual), testado com fone Bluetooth.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

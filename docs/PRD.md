@@ -86,7 +86,7 @@ Criar token do Hugging Face, aceitar os termos dos modelos pyannote, salvar no `
 Criar `config.py` com caminhos, modelo `large-v3`, float16, idioma pt e extensões aceitas. Criar as cinco pastas automaticamente e logs em `~/Transcricoes/logs`.
 **Pronto quando:** rodar duas vezes sem erro e o log registrar mensagens.
 
-### T6 — Módulo de transcrição
+### T6 ✅ — Módulo de transcrição
 
 Transcrever com WhisperX, alinhar palavras, separar falantes, formatar como `[00:01:23] Falante 1: ...`, salvar em `Brutas` e liberar a memória da GPU ao final.
 **Pronto quando:** um áudio de teste vira um `.txt` legível com falantes marcados.

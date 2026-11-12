@@ -32,6 +32,7 @@ MODELO = "large-v3"
 COMPUTE_TYPE = "float16"
 IDIOMA = "pt"
 DEVICE = "cuda"
+BATCH_SIZE = 16  # reduzir (ex.: 8) se faltar memória na GPU
 
 # --- Extensões aceitas em Entrada --------------------------------------------
 EXTENSOES_AUDIO = frozenset({".mp3", ".wav", ".m4a", ".ogg", ".flac", ".opus", ".aac", ".wma"})
