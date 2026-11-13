@@ -51,6 +51,10 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 - **Armadilha conhecida (T9):** a saída de áudio muda (HDMI, fone Bluetooth, Yeti...). Nunca fixar
   nomes de dispositivos: gravar com `-f pulse -i default` (microfone padrão) e
   `-f pulse -i @DEFAULT_MONITOR@` (monitor da saída padrão atual), testado com fone Bluetooth.
+- **Armadilha conhecida (T9):** nunca gravar com nome visível dentro de `Entrada`: o ffmpeg passa
+  10 s ou mais sem o arquivo crescer (grava em blocos) e o observador o pegaria pela metade. Gravar
+  com nome oculto (`Entrada/.nome.mp3`, que o observador ignora) e renomear ao parar (`mv` atômico).
+  Testado: após Ctrl+C no ffmpeg, o `;` seguinte (o `mv`) ainda roda no bash interativo.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

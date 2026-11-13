@@ -96,7 +96,7 @@ Transcrever com WhisperX, alinhar palavras, separar falantes, formatar como `[00
 Criar `prompt.md` com as seções da nota, chamar `claude -p` via subprocess com timeout e `--allowedTools` mínimo, salvar a nota em `Notas` como `AAAA-MM-DD_HHMM_nome.md` e, se falhar, registrar no log mantendo a transcrição bruta.
 **Pronto quando:** uma transcrição de teste vira uma nota completa.
 
-### T8 — Observador da pasta
+### T8 ✅ — Observador da pasta
 
 Usar watchdog em `Entrada`, filtrar formatos, esperar a cópia terminar, processar um arquivo por vez, tratar pendentes ao iniciar e mover para `Processados` após sucesso.
 **Pronto quando:** jogar um MP3 na pasta gera a nota sozinho e o arquivo não é reprocessado.
