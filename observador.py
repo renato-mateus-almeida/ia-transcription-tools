@@ -12,7 +12,9 @@ Rodar:  venv/bin/python observador.py      (Ctrl+C para parar)
 
 from __future__ import annotations
 
+import fcntl
 import logging
+import os
 import queue
 import shutil
 import signal
@@ -162,9 +164,34 @@ class Manipulador(FileSystemEventHandler):
             self.fila.adicionar(Path(evento.src_path))
 
 
+def adquirir_trava():
+    """Garante um único observador por vez (ex.: o serviço e um manual não processam em dobro).
+
+    Usa flock: o sistema libera a trava sozinho se o processo morrer. Retorna o arquivo aberto
+    (manter a referência viva enquanto o observador roda) ou None se outro já estiver rodando.
+    """
+    arquivo = open(config.BASE_DIR / ".observador.lock", "a+")
+    try:
+        fcntl.flock(arquivo, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        arquivo.seek(0)
+        outro = arquivo.read().strip()
+        arquivo.close()
+        log.error("Já existe um observador rodando (PID %s). Se for o serviço, veja: "
+                  "systemctl --user status transcritor", outro or "?")
+        return None
+    arquivo.truncate(0)
+    arquivo.write(str(os.getpid()))
+    arquivo.flush()
+    return arquivo
+
+
 def main() -> int:
     config.criar_pastas()
     config.configurar_logs()
+    trava = adquirir_trava()
+    if trava is None:
+        return 1
     fila = Fila()
     threading.Thread(target=fila.trabalhar, name="processador", daemon=True).start()
 
