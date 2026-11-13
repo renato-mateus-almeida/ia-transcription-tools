@@ -18,6 +18,16 @@ from dotenv import load_dotenv
 PROJETO_DIR = Path(__file__).resolve().parent
 load_dotenv(PROJETO_DIR / ".env")
 
+# --- Sem acesso à rede na transcrição -----------------------------------------
+# Precisa vir antes de qualquer import de huggingface_hub/pyannote (por isso fica aqui, no topo).
+# Depois de instalado, os modelos ficam em ~/.cache/huggingface e nada sai do computador além do
+# texto enviado ao `claude -p`. Para baixar modelos de novo (instalação nova ou troca de modelo),
+# rode com HF_HUB_OFFLINE=0 (no .env ou na linha de comando).
+os.environ.setdefault("HF_HUB_OFFLINE", "1")            # não consultar o Hugging Face por versões novas
+os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")  # sem telemetria do Hugging Face
+os.environ.setdefault("PYANNOTE_METRICS_ENABLED", "0")  # pyannote 4 envia métricas por padrão
+os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")     # ONNX Runtime (Microsoft) envia telemetria 1DS
+
 # --- Pastas (PRD, seção 6) ---------------------------------------------------
 # TRANSCRICOES_DIR no .env permite trocar a base (ex.: testes numa pasta temporária).
 BASE_DIR = Path(os.getenv("TRANSCRICOES_DIR") or "~/Transcricoes").expanduser()
