@@ -67,6 +67,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
   para simular erro use `PULSE_SERVER=unix:/nao/existe`; e **não** troque `XDG_RUNTIME_DIR` (quebra o
   acesso ao áudio) — isole o estado com `GRAVACAO_ESTADO`. Em testes automáticos, use
   `GRAVACAO_MICROFONE=@DEFAULT_MONITOR@` para não gravar o microfone do usuário.
+- Serviço (T10): `~/.config/systemd/user/transcritor.service` (`Restart=on-failure`, sobe no login),
+  gerado pelo `install.sh` com os caminhos do projeto. O `observador.py` usa trava `flock` em
+  `~/Transcricoes/.observador.lock`: nunca rodar um observador manual com o serviço ativo.
+- Instalação (T11): `install.sh` (idempotente; `--sim`, `--sem-modelos`, `--sem-servico`,
+  `--sem-atalho`) e `baixar_modelos.py` (libera a rede e carrega cada modelo uma vez). Para testar
+  o instalador sem mexer no serviço/atalho reais, usar `--sem-servico --sem-atalho` numa cópia.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

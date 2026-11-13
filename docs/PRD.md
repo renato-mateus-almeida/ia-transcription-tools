@@ -106,12 +106,12 @@ Usar watchdog em `Entrada`, filtrar formatos, esperar a cópia terminar, process
 Identificar microfone e monitor com `pactl list short sources`, gravar os dois misturados em MP3 com ffmpeg num arquivo temporário, script bash que inicia/para (via PID), avisa com `notify-send` e move o MP3 para `Entrada` ao parar. Configurar o atalho no Mint.
 **Pronto quando:** o atalho inicia e para, e a gravação tem as duas vozes.
 
-### T10 — Serviço systemd
+### T10 ✅ — Serviço systemd
 
 Criar `~/.config/systemd/user/transcritor.service` com o Python do venv e `Restart=on-failure`, ativar com `systemctl --user enable --now transcritor`.
 **Pronto quando:** o serviço sobe após reiniciar o computador e volta sozinho se for encerrado.
 
-### T11 — README e instalador
+### T11 ✅ — README e instalador
 
 README com instalação, token, atalho e comandos do serviço (status, parar, reiniciar, `journalctl --user -u transcritor`), mais um `install.sh` que faz tudo.
 **Pronto quando:** uma instalação limpa funciona seguindo só o README.
