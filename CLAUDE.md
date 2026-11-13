@@ -45,6 +45,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
 - **Armadilha conhecida (T7):** `claude -p` rodado com cwd dentro do projeto carrega este CLAUDE.md
   (e lê o PRD). Ao gerar notas, rodar o subprocess com `cwd` fora do repositório (ex.: `~/Transcricoes`)
   e sem as variáveis `CLAUDECODE`/`CLAUDE_CODE_*` herdadas.
+- **Transcrição sem rede:** o `config.py` (no topo, antes de qualquer import das bibliotecas) liga
+  `HF_HUB_OFFLINE=1` e desliga telemetrias que vêm **ligadas por padrão**: pyannote 4
+  (`PYANNOTE_METRICS_ENABLED=0`, ia para `otel.pyannote.ai`) e ONNX Runtime 1.31, usado pelo
+  faster-whisper (`ORT_DISABLE_TELEMETRY=1`, ia para `mobile.events.data.microsoft.com`). Verificado
+  com `strace`: 0 conexões externas na transcrição. Só o `claude -p` usa a rede. Para baixar modelos
+  (instalação nova, T11, ou troca de modelo), rodar com `HF_HUB_OFFLINE=0`.
 - VRAM medida na T6: transcrição large-v3 ~4,8 GB; alinhamento ~0,6 GB; diarização mostra pico de
   ~10 GB no `nvidia-smi`, mas é uso oportunista (com limite de 1,7 GB funciona igual, pico real
   ~1,6 GB). Não é risco de falta de memória.
@@ -55,6 +61,12 @@ como serviço de usuário do systemd, observando `~/Transcricoes/Entrada`.
   10 s ou mais sem o arquivo crescer (grava em blocos) e o observador o pegaria pela metade. Gravar
   com nome oculto (`Entrada/.nome.mp3`, que o observador ignora) e renomear ao parar (`mv` atômico).
   Testado: após Ctrl+C no ffmpeg, o `;` seguinte (o `mv`) ainda roda no bash interativo.
+- Gravação (T9): `gravar.sh` liga/desliga; atalho Cinnamon `Ctrl+Shift+Alt+F7` (atalho personalizado
+  `custom0` em `org.cinnamon.desktop.keybindings`); log em `~/Transcricoes/logs/gravacao.log`.
+  Armadilhas de teste: o PipeWire **não falha** com fonte inexistente (cai no microfone padrão) —
+  para simular erro use `PULSE_SERVER=unix:/nao/existe`; e **não** troque `XDG_RUNTIME_DIR` (quebra o
+  acesso ao áudio) — isole o estado com `GRAVACAO_ESTADO`. Em testes automáticos, use
+  `GRAVACAO_MICROFONE=@DEFAULT_MONITOR@` para não gravar o microfone do usuário.
 - Python 3.12 com venv (`venv/` na raiz do projeto, fora do Git).
 - Comandos com `sudo` (ex.: `apt install`) são executados pelo usuário no terminal dele;
   o Claude informa o comando exato e depois verifica o resultado.

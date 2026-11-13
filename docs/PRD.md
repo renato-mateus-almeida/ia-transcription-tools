@@ -101,7 +101,7 @@ Criar `prompt.md` com as seções da nota, chamar `claude -p` via subprocess com
 Usar watchdog em `Entrada`, filtrar formatos, esperar a cópia terminar, processar um arquivo por vez, tratar pendentes ao iniciar e mover para `Processados` após sucesso.
 **Pronto quando:** jogar um MP3 na pasta gera a nota sozinho e o arquivo não é reprocessado.
 
-### T9 — Gravação com atalho
+### T9 ✅ — Gravação com atalho
 
 Identificar microfone e monitor com `pactl list short sources`, gravar os dois misturados em MP3 com ffmpeg num arquivo temporário, script bash que inicia/para (via PID), avisa com `notify-send` e move o MP3 para `Entrada` ao parar. Configurar o atalho no Mint.
 **Pronto quando:** o atalho inicia e para, e a gravação tem as duas vozes.
