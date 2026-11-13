@@ -94,7 +94,8 @@ def gerar_nota(transcricao: Path, data: datetime | None = None) -> Path:
             raise ErroAnalise("transcrição vazia")
         corpo = _chamar_claude(texto)
     except ErroAnalise as e:
-        log.error("Falha ao gerar a nota de %s: %s (transcrição mantida em %s)", transcricao.name, e, transcricao)
+        log.error("Falha ao gerar a nota de %s: %s (transcrição mantida em %s)",
+                  transcricao.name, e, config.relativo(transcricao))
         raise
 
     faltando = [s for s in SECOES if not re.search(rf"^##\s+{re.escape(s)}\s*$", corpo, re.MULTILINE | re.IGNORECASE)]
@@ -105,7 +106,7 @@ def gerar_nota(transcricao: Path, data: datetime | None = None) -> Path:
     temporario = destino.with_suffix(".md.tmp")
     temporario.write_text(nota, encoding="utf-8")
     temporario.replace(destino)  # grava inteira ou nada
-    log.info("Nota salva em %s (%.0fs)", destino, time.monotonic() - inicio)
+    log.info("Nota salva em %s (%.0fs)", config.relativo(destino), time.monotonic() - inicio)
     return destino
 
 

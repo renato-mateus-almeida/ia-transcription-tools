@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
+import warnings
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
@@ -56,6 +57,97 @@ _NOME_HANDLER_ARQUIVO = "transcritor-arquivo"
 _NOME_HANDLER_TELA = "transcritor-tela"
 
 
+class _FormatadorColorido(logging.Formatter):
+    """Pinta só o nome do nível (INFO, WARNING, ERROR) com códigos de cor ANSI."""
+
+    CORES = {
+        logging.INFO: "\033[94m",      # azul claro
+        logging.WARNING: "\033[93m",   # amarelo
+        logging.ERROR: "\033[91m",     # vermelho
+        logging.CRITICAL: "\033[91m",  # vermelho
+    }
+    NORMAL = "\033[0m"
+
+    def format(self, record: logging.LogRecord) -> str:
+        cor = self.CORES.get(record.levelno)
+        if cor is None:
+            return super().format(record)
+        original = record.levelname
+        record.levelname = f"{cor}{original}{self.NORMAL}"
+        try:
+            return super().format(record)
+        finally:
+            record.levelname = original  # o mesmo registro vai sem cor para o arquivo
+
+
+def _terminal_aceita_cores(fluxo) -> bool:
+    """Só colore num terminal de verdade (não em arquivo, pipe ou journalctl)."""
+    return (
+        getattr(fluxo, "isatty", lambda: False)()
+        and os.getenv("NO_COLOR") is None
+        and os.getenv("TERM") != "dumb"
+    )
+
+
+# Bibliotecas que só devem aparecer no log com avisos e erros (as nossas linhas já narram as etapas).
+# O Lightning força INFO nos loggers de pacote quando é importado (no meio da transcrição, depois
+# deste ajuste); os subpacotes "utilities", de onde saem as mensagens, não são tocados e prevalecem.
+_BIBLIOTECAS_SO_AVISOS = (
+    "whisperx",
+    "lightning", "pytorch_lightning", "lightning_fabric",
+    "lightning.pytorch.utilities", "lightning.fabric.utilities",
+    "pytorch_lightning.utilities", "lightning_fabric.utilities",
+)
+
+# Avisos conhecidos e inofensivos (início da mensagem, como regex).
+_AVISOS_IGNORADOS = (
+    r"TensorFloat-32 \(TF32\) has been disabled",  # pyannote, a cada diarização
+    r"std\(\): degrees of freedom is <= 0",        # PyTorch, em trechos curtos de fala
+)
+
+
+class _IgnorarMensagem(logging.Filter):
+    """Descarta registros cuja mensagem contém um trecho específico."""
+
+    def __init__(self, trecho: str) -> None:
+        super().__init__()
+        self.trecho = trecho
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return self.trecho not in record.getMessage()
+
+
+def _ajustar_bibliotecas() -> None:
+    """Faz as bibliotecas usarem o nosso log (formato, cor e arquivo), só com avisos e erros."""
+    for nome in _BIBLIOTECAS_SO_AVISOS:
+        logger = logging.getLogger(nome)
+        logger.setLevel(logging.WARNING)
+        logger.propagate = True
+        for handler in list(logger.handlers):
+            logger.removeHandler(handler)
+        # Um handler "vazio" impede o WhisperX de instalar o próprio formato ao ser importado.
+        logger.addHandler(logging.NullHandler())
+
+    # Corrida interna do watchdog ao encerrar o observador (inofensiva, mas sai como ERROR).
+    inotify = logging.getLogger("watchdog.observers.inotify")
+    if not any(isinstance(f, _IgnorarMensagem) for f in inotify.filters):
+        inotify.addFilter(_IgnorarMensagem("called when the thread is inactive"))
+
+    for padrao in _AVISOS_IGNORADOS:
+        warnings.filterwarnings("ignore", message=padrao)
+    # Demais avisos do Python viram uma linha só no log: "WARNING [py.warnings] Categoria: msg".
+    warnings.formatwarning = lambda mensagem, categoria, *_args, **_kw: f"{categoria.__name__}: {mensagem}"
+    logging.captureWarnings(True)
+
+
+def relativo(caminho: Path) -> str:
+    """Caminho relativo a ~/Transcricoes para mensagens de log (ex.: Brutas/reuniao.txt)."""
+    try:
+        return str(Path(caminho).relative_to(BASE_DIR))
+    except ValueError:
+        return str(caminho)
+
+
 def criar_pastas() -> None:
     """Cria as cinco pastas de trabalho (e a base). Não falha se já existirem."""
     for pasta in PASTAS:
@@ -84,8 +176,13 @@ def configurar_logs(nivel: int = logging.INFO) -> None:
     if _NOME_HANDLER_TELA not in nomes:
         tela = logging.StreamHandler(sys.stderr)  # no systemd, vai para o journalctl
         tela.set_name(_NOME_HANDLER_TELA)
-        tela.setFormatter(formatador)
+        if _terminal_aceita_cores(sys.stderr):
+            tela.setFormatter(_FormatadorColorido(FORMATO_LOG, FORMATO_DATA))
+        else:
+            tela.setFormatter(formatador)
         raiz.addHandler(tela)
+
+    _ajustar_bibliotecas()
 
 
 def _registrar_configuracao() -> None:

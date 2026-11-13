@@ -109,7 +109,7 @@ def transcrever(arquivo: Path) -> Path:
         log.info("3/3 Diarização: %d falante(s) em %.0fs", falantes["speaker"].nunique(), time.monotonic() - t)
 
         destino.write_text(formatar(resultado["segments"]), encoding="utf-8")
-        log.info("Transcrição salva em %s (%.0fs no total)", destino, time.monotonic() - inicio)
+        log.info("Transcrição salva em %s (%.0fs no total)", config.relativo(destino), time.monotonic() - inicio)
         return destino
     finally:
         modelo = alinhador = diarizador = None
