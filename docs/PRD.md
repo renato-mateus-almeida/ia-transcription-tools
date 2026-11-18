@@ -116,7 +116,7 @@ Criar `~/.config/systemd/user/transcritor.service` com o Python do venv e `Resta
 README com instalação, token, atalho e comandos do serviço (status, parar, reiniciar, `journalctl --user -u transcritor`), mais um `install.sh` que faz tudo.
 **Pronto quando:** uma instalação limpa funciona seguindo só o README.
 
-### T12 — Teste final e publicação
+### T12 ✅ — Teste final e publicação
 
 Gravar uma reunião real de alguns minutos, conferir a nota, adicionar licença MIT, revisar segredos e fazer push.
 **Pronto quando:** tudo funciona de ponta a ponta e o repositório está publicado sem `.env` nem áudios.
